@@ -81,6 +81,20 @@ const displayMovements = function (movements) {
 
 displayMovements(account1.movements);
 
+const user = 'Ayush Kavad';
+
+const createUsernames = function (accounts) {
+  accounts.forEach(acc => {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split()
+      .map(user => user[0])
+      .join('');
+  });
+};
+
+createUsernames(accounts);
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // LECTURES
