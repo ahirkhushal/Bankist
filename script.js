@@ -71,7 +71,7 @@ const displayMovements = function (movements) {
           <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type}</div>
-          <div class="movements__value">${mov}</div>
+          <div class="movements__value">${mov}€</div>
         </div>
     `;
 
@@ -80,6 +80,36 @@ const displayMovements = function (movements) {
 };
 
 displayMovements(account1.movements);
+
+const calcDisplatMovements = function (movements) {
+  const balance = movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${balance} EUR`;
+};
+
+calcDisplatMovements(account1.movements);
+
+const calcDisplatSummary = function (movements) {
+  const income = movements
+    .filter(mov => mov > 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumIn.textContent = `${income}€`;
+
+  const out = movements
+    .filter(mov => mov < 0)
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumOut.textContent = `${Math.abs(out)}€`;
+
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(deposit => (deposit * 1.2) / 100)
+    .filter((int, i, arr) => {
+      return int >= 1;
+    })
+    .reduce((acc, mov) => acc + mov, 0);
+  labelSumInterest.textContent = `${Math.abs(interest)}€`;
+};
+
+calcDisplatSummary(account1.movements);
 
 const user = 'Ayush Kavad';
 
@@ -274,6 +304,8 @@ const movementsDiscription = movements.map(
 
 console.log(movementsDiscription);
 
+//FILTER
+
 const positeveMovements = movements.filter((mov, i, arr) => mov > 0);
 console.log(positeveMovements);
 
@@ -286,3 +318,32 @@ console.log(positeveMovementsArr);
 
 const nagativeMovements = movements.filter(mov => mov < 0);
 console.log(nagativeMovements);
+
+//REDUCE
+
+const balance = movements.reduce((acc, mov) => acc + mov, 0);
+console.log(balance);
+
+const newArr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]; //55
+
+const total = newArr.reduce((acc, mov) => acc + mov, 0);
+console.log(total);
+
+// FIND MAX NUMBER FROM AN ARRAY
+
+const max = movements.reduce((acc, mov) => {
+  if (acc > mov) return acc;
+  else return mov;
+});
+
+console.log(max);
+
+const calcAverageHumanAge = function (age) {
+  const ages = age.map(el => (el >= 2 ? el * 2 : 16 + el * 4));
+  const fil = ages.filter(el => el >= 18);
+  console.log(fil);
+  const to = fil.reduce((acc, mov) => acc + mov, 0);
+  return to;
+};
+
+console.log(calcAverageHumanAge([2, 5, 4, 1, 15, 8, 3]));
