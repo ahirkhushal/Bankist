@@ -20,21 +20,26 @@
     <nav>
       <p class="welcome">Log in to get started</p>
       <img src="logo.png" alt="Logo" class="logo" />
-      <form class="login">
-        <input
-          type="text"
-          placeholder="user"
-          class="login__input login__input--user"
-        />
-        <!-- In practice, use type="password" -->
-        <input
-          type="text"
-          placeholder="PIN"
-          maxlength="4"
-          class="login__input login__input--pin"
-        />
-        <button class="login__btn">&rarr;</button>
-      </form>
+      <div>
+        <form class="login">
+          <input
+            type="text"
+            placeholder="user"
+            class="login__input login__input--user"
+          />
+          <!-- In practice, use type="password" -->
+          <input
+            type="text"
+            placeholder="PIN"
+            maxlength="4"
+            class="login__input login__input--pin"
+          />
+          <button class="login__btn">&rarr;</button>
+        </form>
+        <h3 style="text-align: center; margin-top: 10px" class="message">
+          Wrong user or pin
+        </h3>
+      </div>
     </nav>
 
     <main class="app">
