@@ -63,7 +63,6 @@ const inputCloseUsername = document.querySelector('.form__input--user');
 const inputClosePin = document.querySelector('.form__input--pin');
 
 const displayMovements = function (acc) {
-  console.log(movements);
   containerMovements.innerHTML = '';
   acc.movements.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
@@ -80,12 +79,12 @@ const displayMovements = function (acc) {
   });
 };
 
-const calcDisplayMovements = function (acc) {
-  const balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
-  labelBalance.textContent = `${balance} EUR`;
+const calcDisplayMovements = acc => {
+  acc.balance = acc.movements.reduce((acc, mov) => acc + mov, 0);
+  labelBalance.textContent = `${acc.balance} EUR`;
 };
 
-const calcDisplaySummary = function (acc) {
+const calcDisplaySummary = acc => {
   const income = acc.movements
     .filter(mov => mov > 0)
     .reduce((acc, mov) => acc + mov, 0);
@@ -106,7 +105,7 @@ const calcDisplaySummary = function (acc) {
   labelSumInterest.textContent = `${Math.abs(interest)}€`;
 };
 
-const createUsernames = function (accounts) {
+const createUsernames = accounts => {
   console.log(accounts);
   accounts.forEach(acc => {
     acc.username = acc.owner
@@ -117,14 +116,33 @@ const createUsernames = function (accounts) {
   });
 };
 
+const displayUI = acc => {
+  // Display Movements
+  displayMovements(acc);
+
+  // Display Balance
+  calcDisplayMovements(acc);
+
+  // Display Summary
+  calcDisplaySummary(acc);
+};
+
 const clearFields = () => {
   inputLoginUsername.value = inputLoginPin.value = '';
+  inputTransferTo.value = inputTransferAmount.value = '';
+  inputCloseUsername.value = inputClosePin.value = '';
+  inputLoanAmount.value = '';
   inputLoginUsername.blur();
   inputLoginPin.blur();
+  inputTransferTo.blur();
+  inputTransferAmount.blur();
+  inputLoanAmount.blur();
+  inputCloseUsername.blur();
+  inputClosePin.blur();
 };
 
 // console.log(accounts);
-console.log(createUsernames(accounts));
+createUsernames(accounts);
 
 let currentAccount;
 
@@ -142,22 +160,83 @@ btnLogin.addEventListener('click', e => {
       currentAccount.owner.split(' ')[0]
     }`;
 
-    message.classList.toggle('message');
+    message.classList.add('message');
     containerApp.style.opacity = 100;
 
     // Clear input fields
     clearFields();
 
-    // Display Movements
-    displayMovements(currentAccount);
-
-    // Display Balance
-    calcDisplayMovements(currentAccount);
-
-    // Display Summary
-    calcDisplaySummary(currentAccount);
+    // Display UI
+    displayUI(currentAccount);
   } else {
     message.classList.remove('message');
     clearFields();
   }
+});
+
+btnTransfer.addEventListener('click', e => {
+  e.preventDefault();
+
+  const amount = +inputTransferAmount.value;
+  const receiveAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
+
+  if (
+    amount > 0 &&
+    receiveAcc &&
+    currentAccount.balance >= amount &&
+    currentAccount.username !== receiveAcc?.username
+  ) {
+    //Transactions between accounts
+    currentAccount.movements.push(-amount);
+    receiveAcc.movements.push(amount);
+
+    // Clear input fields
+    clearFields();
+
+    // Display UI
+    displayUI(currentAccount);
+  }
+});
+
+btnLoan.addEventListener('click', e => {
+  e.preventDefault();
+
+  // Request for load
+  const loan = +inputLoanAmount.value;
+
+  // Approved load
+  currentAccount.movements.push(loan);
+
+  // Clear input fields
+  clearFields();
+
+  // Display UI
+  displayUI(currentAccount);
+});
+
+btnClose.addEventListener('click', e => {
+  e.preventDefault();
+
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === +inputClosePin.value
+  ) {
+    // Find account index
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+
+    // Clear input fields
+    clearFields();
+
+    // Delete account
+    accounts.splice(index, 1);
+
+    //Hide UI
+    containerApp.style.opacity = 0;
+  }
+
+  console.log(accounts);
 });
