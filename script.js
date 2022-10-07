@@ -1,5 +1,32 @@
 'use strict';
 
+// Elements
+const labelWelcome = document.querySelector('.welcome');
+const labelDate = document.querySelector('.date');
+const labelBalance = document.querySelector('.balance__value');
+const labelSumIn = document.querySelector('.summary__value--in');
+const labelSumOut = document.querySelector('.summary__value--out');
+const labelSumInterest = document.querySelector('.summary__value--interest');
+const labelTimer = document.querySelector('.timer');
+
+const containerApp = document.querySelector('.app');
+const containerMovements = document.querySelector('.movements');
+const message = document.querySelector('.message');
+
+const btnLogin = document.querySelector('.login__btn');
+const btnTransfer = document.querySelector('.form__btn--transfer');
+const btnLoan = document.querySelector('.form__btn--loan');
+const btnClose = document.querySelector('.form__btn--close');
+const btnSort = document.querySelector('.btn--sort');
+
+const inputLoginUsername = document.querySelector('.login__input--user');
+const inputLoginPin = document.querySelector('.login__input--pin');
+const inputTransferTo = document.querySelector('.form__input--to');
+const inputTransferAmount = document.querySelector('.form__input--amount');
+const inputLoanAmount = document.querySelector('.form__input--loan-amount');
+const inputCloseUsername = document.querySelector('.form__input--user');
+const inputClosePin = document.querySelector('.form__input--pin');
+
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
 // BANKIST APP
@@ -35,36 +62,14 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-// Elements
-const labelWelcome = document.querySelector('.welcome');
-const labelDate = document.querySelector('.date');
-const labelBalance = document.querySelector('.balance__value');
-const labelSumIn = document.querySelector('.summary__value--in');
-const labelSumOut = document.querySelector('.summary__value--out');
-const labelSumInterest = document.querySelector('.summary__value--interest');
-const labelTimer = document.querySelector('.timer');
-
-const containerApp = document.querySelector('.app');
-const containerMovements = document.querySelector('.movements');
-const message = document.querySelector('.message');
-
-const btnLogin = document.querySelector('.login__btn');
-const btnTransfer = document.querySelector('.form__btn--transfer');
-const btnLoan = document.querySelector('.form__btn--loan');
-const btnClose = document.querySelector('.form__btn--close');
-const btnSort = document.querySelector('.btn--sort');
-
-const inputLoginUsername = document.querySelector('.login__input--user');
-const inputLoginPin = document.querySelector('.login__input--pin');
-const inputTransferTo = document.querySelector('.form__input--to');
-const inputTransferAmount = document.querySelector('.form__input--amount');
-const inputLoanAmount = document.querySelector('.form__input--loan-amount');
-const inputCloseUsername = document.querySelector('.form__input--user');
-const inputClosePin = document.querySelector('.form__input--pin');
-
-const displayMovements = function (acc) {
+const displayMovements = function (acc, sort = false) {
   containerMovements.innerHTML = '';
-  acc.movements.forEach((mov, i) => {
+
+  const sortMovements = sort
+    ? acc.movements.slice().sort((a, b) => a - b)
+    : acc.movements;
+
+  sortMovements.forEach((mov, i) => {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
         <div class="movements__row">
@@ -116,6 +121,8 @@ const createUsernames = accounts => {
   });
 };
 
+createUsernames(accounts);
+
 const displayUI = acc => {
   // Display Movements
   displayMovements(acc);
@@ -140,9 +147,6 @@ const clearFields = () => {
   inputCloseUsername.blur();
   inputClosePin.blur();
 };
-
-// console.log(accounts);
-createUsernames(accounts);
 
 let currentAccount;
 
@@ -203,16 +207,18 @@ btnLoan.addEventListener('click', e => {
   e.preventDefault();
 
   // Request for load
-  const loan = +inputLoanAmount.value;
+  const amount = +inputLoanAmount.value;
 
-  // Approved load
-  currentAccount.movements.push(loan);
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    // Approved load
+    currentAccount.movements.push(amount);
+
+    // Display UI
+    displayUI(currentAccount);
+  }
 
   // Clear input fields
   clearFields();
-
-  // Display UI
-  displayUI(currentAccount);
 });
 
 btnClose.addEventListener('click', e => {
@@ -227,9 +233,6 @@ btnClose.addEventListener('click', e => {
       acc => acc.username === currentAccount.username
     );
 
-    // Clear input fields
-    clearFields();
-
     // Delete account
     accounts.splice(index, 1);
 
@@ -237,5 +240,15 @@ btnClose.addEventListener('click', e => {
     containerApp.style.opacity = 0;
   }
 
-  console.log(accounts);
+  // Clear input fields
+  clearFields();
+});
+
+// Sorting movements
+
+let isSort = false;
+btnSort.addEventListener('click', e => {
+  e.preventDefault();
+  displayMovements(currentAccount, !isSort);
+  isSort = !isSort;
 });
