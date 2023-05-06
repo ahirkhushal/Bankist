@@ -4,12 +4,13 @@ const containerMovement = document.querySelector(".movements");
 
 const account1 = {
   owner: "khushal ahir",
-  movments: [200, -400, 300, 200, -100, 452],
+  movments: [200, -400, 300, 200, -100, 452, 1245, -225],
   interestRate: 1.2,
   pin: 1111,
 };
 
 const movmentFunc = function (movment) {
+  containerMovement.innerHTML = " ";
   movment.forEach((mov, i) => {
     // conditional operator of deposit or withdrawal
     const type = mov > 0 ? "deposit" : "withdrawal";
