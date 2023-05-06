@@ -1,10 +1,6 @@
 "use strict";
 
-const mainbox = document.querySelector(".movements");
-const box = document.querySelector(".movements__row");
-const box1 = document.querySelector(".movements__date");
-const box2 = document.querySelector(".movements__type");
-const box3 = document.querySelector(".movements__value");
+const containerMovement = document.querySelector(".movements");
 
 const account1 = {
   owner: "khushal ahir",
@@ -28,7 +24,7 @@ const movmentFunc = function (movment) {
  </div>`;
 
     //adding html to mobment class
-    mainbox.insertAdjacentHTML("afterBegin", htmlText);
+    containerMovement.insertAdjacentHTML("afterBegin", htmlText);
   });
 };
 
