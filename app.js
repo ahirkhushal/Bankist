@@ -29,6 +29,8 @@ const account4 = {
   pin: 2222,
 };
 
+const accounts = [account1, account2, account3, account4];
+
 const movmentFunc = function (movment) {
   containerMovement.innerHTML = " ";
   movment.forEach((mov, i) => {
@@ -50,3 +52,16 @@ const movmentFunc = function (movment) {
 };
 
 movmentFunc(account1.movments);
+
+const usernamesCreater = function (takeName) {
+  takeName.forEach(function (acc) {
+    acc.username = acc.owner
+      .toLowerCase()
+      .split(" ")
+      .map((user) => user[0])
+      .join("");
+  });
+};
+
+usernamesCreater(accounts);
+console.log(accounts);
