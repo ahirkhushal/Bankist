@@ -8,6 +8,26 @@ const account1 = {
   interestRate: 1.2,
   pin: 1111,
 };
+const account2 = {
+  owner: "ayush kavad",
+  movments: [450, -4000, 800, -200, -1000, 40552, 12745, -25],
+  interestRate: 1.5,
+  pin: 2222,
+};
+
+const account3 = {
+  owner: "mihir ahir",
+  movments: [100, 4400, 30550, -200, 1500, 452, -245, -500],
+  interestRate: 1,
+  pin: 2222,
+};
+
+const account4 = {
+  owner: "mohit kavad",
+  movments: [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
+  interestRate: 17,
+  pin: 2222,
+};
 
 const movmentFunc = function (movment) {
   containerMovement.innerHTML = " ";
