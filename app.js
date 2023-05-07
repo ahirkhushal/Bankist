@@ -1,6 +1,7 @@
 "use strict";
 
 const containerMovement = document.querySelector(".movements");
+const TotalBalance = document.querySelector(".balance__value");
 
 const account1 = {
   owner: "khushal ahir",
@@ -53,6 +54,15 @@ const movmentFunc = function (movment) {
 
 movmentFunc(account1.movments);
 
+const countingBalance = function (movements) {
+  const balance = movements.reduce((acc, cur) => acc + cur);
+  balance >= 0
+    ? (TotalBalance.style.color = "green")
+    : (TotalBalance.style.color = "red");
+  TotalBalance.textContent = `${balance}€`;
+};
+countingBalance(account1.movments);
+
 const usernamesCreater = function (takeName) {
   takeName.forEach(function (acc) {
     acc.username = acc.owner
@@ -62,6 +72,4 @@ const usernamesCreater = function (takeName) {
       .join("");
   });
 };
-
 usernamesCreater(accounts);
-console.log(accounts);
