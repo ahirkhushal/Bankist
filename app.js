@@ -2,10 +2,13 @@
 
 const containerMovement = document.querySelector(".movements");
 const TotalBalance = document.querySelector(".balance__value");
+const income = document.querySelector(".summary__value--in");
+const outcome = document.querySelector(".summary__value--out");
+const interst = document.querySelector(".summary__value--interest");
 
 const account1 = {
   owner: "khushal ahir",
-  movments: [200, -400, 300, 200, -100, 452, 1245, -225],
+  movments: [200, -400, 300, 200, -100, 452, 45, -225],
   interestRate: 1.2,
   pin: 1111,
 };
@@ -26,7 +29,7 @@ const account3 = {
 const account4 = {
   owner: "mohit kavad",
   movments: [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
-  interestRate: 17,
+  interestRate: 1.7,
   pin: 2222,
 };
 
@@ -51,17 +54,36 @@ const movmentFunc = function (movment) {
     containerMovement.insertAdjacentHTML("afterBegin", htmlText);
   });
 };
-
 movmentFunc(account1.movments);
 
 const countingBalance = function (movements) {
   const balance = movements.reduce((acc, cur) => acc + cur);
   balance >= 0
-    ? (TotalBalance.style.color = "green")
+    ? (TotalBalance.style.color = "#66c873")
     : (TotalBalance.style.color = "red");
   TotalBalance.textContent = `${balance}€`;
 };
 countingBalance(account1.movments);
+
+const incomes = function (movements) {
+  const IncomeCount = movements
+    .filter((mov) => mov > 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  income.textContent = `${IncomeCount}€`;
+
+  const outcomes = movements
+    .filter((mov) => mov < 0)
+    .reduce((acc, cur) => acc + cur, 0);
+  outcome.textContent = `${Math.abs(outcomes)}€`;
+
+  const interestRate = movements
+    .filter((mov) => mov > 0)
+    .map((deposit) => (deposit * 1.2) / 100)
+    .filter((mov2) => mov2 >= 1)
+    .reduce((acc, int) => acc + int, 0);
+  interst.textContent = `${interestRate}€`;
+};
+incomes(account1.movments);
 
 const usernamesCreater = function (takeName) {
   takeName.forEach(function (acc) {
