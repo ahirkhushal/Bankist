@@ -5,10 +5,15 @@ const TotalBalance = document.querySelector(".balance__value");
 const income = document.querySelector(".summary__value--in");
 const outcome = document.querySelector(".summary__value--out");
 const interst = document.querySelector(".summary__value--interest");
+const userlogin = document.querySelector(".login__input--user");
+const password = document.querySelector(".login__input--pin");
+const loginbutton = document.querySelector(".login__btn");
+const displayWelcome = document.querySelector(".welcome");
+const containerapp = document.querySelector(".app");
 
 const account1 = {
   owner: "khushal ahir",
-  movments: [200, -400, 300, 200, -100, 452, 45, -225],
+  movments: [200, -400, 300, 200, -100, 452, 45, -225, 2254, 5314586, 4457],
   interestRate: 1.2,
   pin: 1111,
 };
@@ -35,6 +40,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+//ACCOUNT TRANJECTION HISTORY
 const movmentFunc = function (movment) {
   containerMovement.innerHTML = " ";
   movment.forEach((mov, i) => {
@@ -50,12 +56,12 @@ const movmentFunc = function (movment) {
    <div class="movements__value">${mov}€</div>
  </div>`;
 
-    //adding html to mobment class
+    //adding html to movment class
     containerMovement.insertAdjacentHTML("afterBegin", htmlText);
   });
 };
-movmentFunc(account1.movments);
 
+//TOTAL BANK BALANCE
 const countingBalance = function (movements) {
   const balance = movements.reduce((acc, cur) => acc + cur);
   balance >= 0
@@ -63,28 +69,59 @@ const countingBalance = function (movements) {
     : (TotalBalance.style.color = "red");
   TotalBalance.textContent = `${balance}€`;
 };
-countingBalance(account1.movments);
 
-const incomes = function (movements) {
-  const IncomeCount = movements
+//SETTING ACCOUNTS
+const setaccounts = function (acc) {
+  // COUNT INCOME
+  const IncomeCount = acc.movments
     .filter((mov) => mov > 0)
     .reduce((acc, cur) => acc + cur, 0);
   income.textContent = `${IncomeCount}€`;
 
-  const outcomes = movements
+  // COUNT OUTCOMES
+  const outcomes = acc.movments
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
   outcome.textContent = `${Math.abs(outcomes)}€`;
 
-  const interestRate = movements
+  //COUNT INTRESTRATE
+  const interestRate = acc.movments
     .filter((mov) => mov > 0)
-    .map((deposit) => (deposit * 1.2) / 100)
-    .filter((mov2) => mov2 >= 1)
+    .map((deposit) => (deposit * acc.interestRate) / 100)
+    .filter((int) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  interst.textContent = `${interestRate}€`;
+  interst.textContent = `${interestRate.toFixed(2)}€`;
 };
-incomes(account1.movments);
 
+//LOGIN TO ACCOUNT
+let currentAccount;
+loginbutton.addEventListener("click", (event) => {
+  event.preventDefault();
+  currentAccount = accounts.find((acc) => acc.username === userlogin.value);
+  if (currentAccount?.pin === Number(password.value)) {
+    //WELCOME MESSAGE
+    displayWelcome.textContent = `WELCOME, ${currentAccount.owner
+      .split(" ")[0]
+      .toUpperCase()}`;
+    displayWelcome.style.fontWeight = "bold";
+    containerapp.style.opacity = 1;
+
+    //DISPLAY MOVEMENTS
+    movmentFunc(currentAccount.movments);
+
+    // DISPLAY BALANCE
+    countingBalance(currentAccount.movments);
+
+    //DISPLAY SUMMARY
+    setaccounts(currentAccount);
+
+    //CLEAR LOGIN INPUTS
+    userlogin.value = password.value = "";
+    password.blur();
+  }
+});
+
+//MAKING USERNAMES
 const usernamesCreater = function (takeName) {
   takeName.forEach(function (acc) {
     acc.username = acc.owner
