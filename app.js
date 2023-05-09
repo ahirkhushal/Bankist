@@ -16,6 +16,8 @@ const transfer = document.querySelector(".form__btn--transfer");
 const removeAccUser = document.querySelector(".form__input--user");
 const removeAccPass = document.querySelector(".form__input--pin");
 const removeAccConfirm = document.querySelector(".form__btn--close");
+const loanAmount = document.querySelector(".form__input--loan-amount");
+const requstLoan = document.querySelector(".form__btn--loan");
 
 const account1 = {
   owner: "khushal ahir",
@@ -58,7 +60,6 @@ const movmentFunc = function (movment) {
    <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type.toUpperCase()}</div>
-   <div class="movements__date">3 days ago</div>
    <div class="movements__value">${mov}€</div>
  </div>`;
 
@@ -152,6 +153,18 @@ transfer.addEventListener("click", (event) => {
   }
   transferTo.value = transferAmmount.value = "";
   transferAmmount.blur();
+});
+
+//REQUEST LOAN
+requstLoan.addEventListener("click", (event) => {
+  event.preventDefault();
+  const amount = Number(loanAmount.value);
+  const o = currentAccount.movments.some((mov) => mov >= amount / 10);
+  if (amount > 0 && o) {
+    currentAccount.movments.push(amount);
+    updateUI(currentAccount);
+  }
+  loanAmount.value = "";
 });
 
 //DELETE ACCOUNT
