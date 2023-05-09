@@ -18,6 +18,7 @@ const removeAccPass = document.querySelector(".form__input--pin");
 const removeAccConfirm = document.querySelector(".form__btn--close");
 const loanAmount = document.querySelector(".form__input--loan-amount");
 const requstLoan = document.querySelector(".form__btn--loan");
+const sortbtn = document.querySelector(".btn--sort");
 
 const account1 = {
   owner: "khushal ahir",
@@ -49,9 +50,10 @@ const account4 = {
 const accounts = [account1, account2, account3, account4];
 
 //DISPLAY MOVMENT
-const movmentFunc = function (movment) {
+const movmentFunc = function (movment, sort = false) {
   containerMovement.innerHTML = " ";
-  movment.forEach((mov, i) => {
+  const movs = sort ? movment.slice().sort((a, b) => a - b) : movment;
+  movs.forEach((mov, i) => {
     // conditional operator of deposit or withdrawal
     const type = mov > 0 ? "deposit" : "withdrawal";
 
@@ -182,6 +184,14 @@ removeAccConfirm.addEventListener("click", (event) => {
     containerapp.style.opacity = 0;
   }
   removeAccUser.value = removeAccPass.value = "";
+});
+
+//SORTING MOVMENTS
+let sorted = false;
+sortbtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  movmentFunc(currentAccount.movments, !sorted);
+  sorted = !sorted;
 });
 
 //MAKING USERNAMES
