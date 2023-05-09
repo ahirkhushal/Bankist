@@ -13,7 +13,9 @@ const containerapp = document.querySelector(".app");
 const transferTo = document.querySelector(".form__input--to");
 const transferAmmount = document.querySelector(".form__input--amount");
 const transfer = document.querySelector(".form__btn--transfer");
-// console.log(transfer);
+const removeAccUser = document.querySelector(".form__input--user");
+const removeAccPass = document.querySelector(".form__input--pin");
+const removeAccConfirm = document.querySelector(".form__btn--close");
 
 const account1 = {
   owner: "khushal ahir",
@@ -150,6 +152,23 @@ transfer.addEventListener("click", (event) => {
   }
   transferTo.value = transferAmmount.value = "";
   transferAmmount.blur();
+});
+
+//DELETE ACCOUNT
+removeAccConfirm.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (
+    currentAccount.username === removeAccUser.value &&
+    currentAccount.pin === Number(removeAccPass.value)
+  ) {
+    const indexofAcc = accounts.findIndex(
+      (arr) => arr.username === currentAccount.username
+    );
+    console.log(indexofAcc);
+    accounts.splice(indexofAcc, 1);
+    containerapp.style.opacity = 0;
+  }
+  removeAccUser.value = removeAccPass.value = "";
 });
 
 //MAKING USERNAMES
