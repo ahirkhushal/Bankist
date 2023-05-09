@@ -10,6 +10,10 @@ const password = document.querySelector(".login__input--pin");
 const loginbutton = document.querySelector(".login__btn");
 const displayWelcome = document.querySelector(".welcome");
 const containerapp = document.querySelector(".app");
+const transferTo = document.querySelector(".form__input--to");
+const transferAmmount = document.querySelector(".form__input--amount");
+const transfer = document.querySelector(".form__btn--transfer");
+// console.log(transfer);
 
 const account1 = {
   owner: "khushal ahir",
@@ -40,7 +44,7 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
-//ACCOUNT TRANJECTION HISTORY
+//DISPLAY MOVMENT
 const movmentFunc = function (movment) {
   containerMovement.innerHTML = " ";
   movment.forEach((mov, i) => {
@@ -62,12 +66,12 @@ const movmentFunc = function (movment) {
 };
 
 //TOTAL BANK BALANCE
-const countingBalance = function (movements) {
-  const balance = movements.reduce((acc, cur) => acc + cur);
-  balance >= 0
+const countingBalance = function (acc) {
+  acc.balance = acc.movments.reduce((acc, cur) => acc + cur);
+  acc.balance >= 0
     ? (TotalBalance.style.color = "#66c873")
     : (TotalBalance.style.color = "red");
-  TotalBalance.textContent = `${balance}€`;
+  TotalBalance.textContent = `${acc.balance}€`;
 };
 
 //SETTING ACCOUNTS
@@ -93,6 +97,17 @@ const setaccounts = function (acc) {
   interst.textContent = `${interestRate.toFixed(2)}€`;
 };
 
+const updateUI = (acc) => {
+  //DISPLAY MOVEMENTS
+  movmentFunc(acc.movments);
+
+  // DISPLAY TOTAL BALANCE
+  countingBalance(acc);
+
+  //DISPLAY SUMMARY
+  setaccounts(acc);
+};
+
 //LOGIN TO ACCOUNT
 let currentAccount;
 loginbutton.addEventListener("click", (event) => {
@@ -106,19 +121,35 @@ loginbutton.addEventListener("click", (event) => {
     displayWelcome.style.fontWeight = "bold";
     containerapp.style.opacity = 1;
 
-    //DISPLAY MOVEMENTS
-    movmentFunc(currentAccount.movments);
-
-    // DISPLAY BALANCE
-    countingBalance(currentAccount.movments);
-
-    //DISPLAY SUMMARY
-    setaccounts(currentAccount);
-
+    updateUI(currentAccount);
     //CLEAR LOGIN INPUTS
     userlogin.value = password.value = "";
     password.blur();
   }
+});
+
+//TRANSFER MONEY
+transfer.addEventListener("click", (event) => {
+  event.preventDefault();
+  const amount = Number(transferAmmount.value);
+  const receiverAccount = accounts.find(
+    (arr) => arr.username === transferTo.value
+  );
+  if (
+    amount > 0 &&
+    receiverAccount &&
+    amount <= currentAccount.balance &&
+    amount <= 10000 &&
+    receiverAccount?.username !== currentAccount.username
+  ) {
+    currentAccount.movments.push(-amount);
+    receiverAccount.movments.push(amount);
+
+    //UPDATE UI
+    updateUI(currentAccount);
+  }
+  transferTo.value = transferAmmount.value = "";
+  transferAmmount.blur();
 });
 
 //MAKING USERNAMES
