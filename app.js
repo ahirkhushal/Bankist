@@ -62,7 +62,7 @@ const movmentFunc = function (movment, sort = false) {
    <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type.toUpperCase()}</div>
-   <div class="movements__value">${mov}€</div>
+   <div class="movements__value">${mov.toFixed(2)}€</div>
  </div>`;
 
     //adding html to movment class
@@ -76,7 +76,7 @@ const countingBalance = function (acc) {
   acc.balance >= 0
     ? (TotalBalance.style.color = "#66c873")
     : (TotalBalance.style.color = "red");
-  TotalBalance.textContent = `${acc.balance}€`;
+  TotalBalance.textContent = `${acc.balance.toFixed(2)}€`;
 };
 
 //SETTING ACCOUNTS
@@ -85,13 +85,13 @@ const setaccounts = function (acc) {
   const IncomeCount = acc.movments
     .filter((mov) => mov > 0)
     .reduce((acc, cur) => acc + cur, 0);
-  income.textContent = `${IncomeCount}€`;
+  income.textContent = `${IncomeCount.toFixed(2)}€`;
 
   // COUNT OUTCOMES
   const outcomes = acc.movments
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
-  outcome.textContent = `${Math.abs(outcomes)}€`;
+  outcome.textContent = `${Math.abs(outcomes).toFixed(2)}€`;
 
   //COUNT INTRESTRATE
   const interestRate = acc.movments
@@ -160,7 +160,7 @@ transfer.addEventListener("click", (event) => {
 //REQUEST LOAN
 requstLoan.addEventListener("click", (event) => {
   event.preventDefault();
-  const amount = Number(loanAmount.value);
+  const amount = Math.floor(loanAmount.value);
   const o = currentAccount.movments.some((mov) => mov >= amount / 10);
   if (amount > 0 && o) {
     currentAccount.movments.push(amount);
