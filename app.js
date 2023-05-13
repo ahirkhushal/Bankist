@@ -19,16 +19,37 @@ const removeAccConfirm = document.querySelector(".form__btn--close");
 const loanAmount = document.querySelector(".form__input--loan-amount");
 const requstLoan = document.querySelector(".form__btn--loan");
 const sortbtn = document.querySelector(".btn--sort");
+const date = document.querySelector(".date");
 
 const account1 = {
   owner: "khushal ahir",
-  movments: [200, -400, 300, 200, -100, 452, 45, -225, 2254, 5314586, 4457],
+  movments: [200, -400, 300, 200, -100, 452, 45, 4457],
+  movDates: [
+    "2012-11-19T09:53:00.000Z",
+    "2012-11-20T09:53:00.000Z",
+    "2012-11-21T09:53:00.000Z",
+    "2012-11-22T09:53:00.000Z",
+    "2012-11-23T09:53:00.000Z",
+    "2012-11-24T09:53:00.000Z",
+    "2012-11-25T09:53:00.000Z",
+    "2012-11-26T09:53:00.000Z",
+  ],
   interestRate: 1.2,
   pin: 1111,
 };
 const account2 = {
   owner: "ayush kavad",
   movments: [450, -4000, 800, -200, -1000, 40552, 12745, -25],
+  movDates: [
+    "2012-12-01T09:53:00.000Z",
+    "2012-12-02T09:53:00.000Z",
+    "2012-12-03T09:53:00.000Z",
+    "2012-12-04T09:53:00.000Z",
+    "2012-12-05T09:53:00.000Z",
+    "2012-12-06T09:53:00.000Z",
+    "2012-12-07T09:53:00.000Z",
+    "2012-12-08T09:53:00.000Z",
+  ],
   interestRate: 1.5,
   pin: 2222,
 };
@@ -36,32 +57,61 @@ const account2 = {
 const account3 = {
   owner: "mihir ahir",
   movments: [100, 4400, 30550, -200, 1500, 452, -245, -500],
+  movDates: [
+    "2012-12-19T09:53:00.000Z",
+    "2012-12-20T09:53:00.000Z",
+    "2012-12-21T09:53:00.000Z",
+    "2012-12-22T09:53:00.000Z",
+    "2012-12-23T09:53:00.000Z",
+    "2012-12-24T09:53:00.000Z",
+    "2012-12-25T09:53:00.000Z",
+    "2012-12-26T09:53:00.000Z",
+  ],
   interestRate: 1,
-  pin: 2222,
+  pin: 3333,
 };
 
 const account4 = {
   owner: "mohit kavad",
   movments: [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
+  movDates: [
+    "2013-01-19T09:53:00.000Z",
+    "2013-01-20T09:53:00.000Z",
+    "2013-01-21T09:53:00.000Z",
+    "2013-01-22T09:53:00.000Z",
+    "2013-01-23T09:53:00.000Z",
+    "2013-01-24T09:53:00.000Z",
+    "2013-01-25T09:53:00.000Z",
+    "2013-01-26T09:53:00.000Z",
+  ],
   interestRate: 1.7,
-  pin: 2222,
+  pin: 4444,
 };
 
 const accounts = [account1, account2, account3, account4];
 
 //DISPLAY MOVMENT
-const movmentFunc = function (movment, sort = false) {
+const movmentFunc = function (acc, sort = false) {
   containerMovement.innerHTML = " ";
-  const movs = sort ? movment.slice().sort((a, b) => a - b) : movment;
+  const movs = sort ? acc.movments.slice().sort((a, b) => a - b) : acc.movments;
   movs.forEach((mov, i) => {
     // conditional operator of deposit or withdrawal
     const type = mov > 0 ? "deposit" : "withdrawal";
+
+    //ADDING TRANSECTION DATES
+    console.log(acc.movDates[i]);
+    const date = new Date(acc.movDates[i]);
+    const dd = `${date.getDate()}`.padStart(2, 0);
+    const mm = `${date.getMonth() + 1}`.padStart(2, 0);
+    const yy = date.getFullYear();
+    const dateOfMov = `${dd}/${mm}/${yy}`;
 
     // textContent of HTML'S movements class
     const htmlText = `<div class="movements__row">
    <div class="movements__type movements__type--${type}">${
       i + 1
     } ${type.toUpperCase()}</div>
+    <div class="movements__date">${dateOfMov}</div>
    <div class="movements__value">${mov.toFixed(2)}€</div>
  </div>`;
 
@@ -104,7 +154,7 @@ const setaccounts = function (acc) {
 
 const updateUI = (acc) => {
   //DISPLAY MOVEMENTS
-  movmentFunc(acc.movments);
+  movmentFunc(acc);
 
   // DISPLAY TOTAL BALANCE
   countingBalance(acc);
@@ -117,6 +167,16 @@ const updateUI = (acc) => {
 let currentAccount;
 loginbutton.addEventListener("click", (event) => {
   event.preventDefault();
+
+  //LOGIN DATE AND TIME
+  const dates = new Date();
+  const dd = `${dates.getDate()}`.padStart(2, 0);
+  const mm = `${dates.getMonth() + 1}`.padStart(2, 0);
+  const yy = dates.getFullYear();
+  const hours = `${dates.getHours()}`.padStart(2, 0);
+  const minutes = `${dates.getMinutes()}`.padStart(2, 0);
+  date.textContent = `${dd}/${mm}/${yy}, ${hours}:${minutes}`;
+
   currentAccount = accounts.find((acc) => acc.username === userlogin.value);
   if (currentAccount?.pin === Number(password.value)) {
     //WELCOME MESSAGE
@@ -136,6 +196,7 @@ loginbutton.addEventListener("click", (event) => {
 //TRANSFER MONEY
 transfer.addEventListener("click", (event) => {
   event.preventDefault();
+
   const amount = Number(transferAmmount.value);
   const receiverAccount = accounts.find(
     (arr) => arr.username === transferTo.value
@@ -148,8 +209,9 @@ transfer.addEventListener("click", (event) => {
     receiverAccount?.username !== currentAccount.username
   ) {
     currentAccount.movments.push(-amount);
+    currentAccount.movDates.push(new Date().toISOString());
     receiverAccount.movments.push(amount);
-
+    receiverAccount.movDates.push(new Date().toISOString());
     //UPDATE UI
     updateUI(currentAccount);
   }
@@ -160,10 +222,12 @@ transfer.addEventListener("click", (event) => {
 //REQUEST LOAN
 requstLoan.addEventListener("click", (event) => {
   event.preventDefault();
+
   const amount = Math.floor(loanAmount.value);
   const o = currentAccount.movments.some((mov) => mov >= amount / 10);
   if (amount > 0 && o) {
     currentAccount.movments.push(amount);
+    currentAccount.movDates.push(new Date().toISOString());
     updateUI(currentAccount);
   }
   loanAmount.value = "";
@@ -190,7 +254,7 @@ removeAccConfirm.addEventListener("click", (event) => {
 let sorted = false;
 sortbtn.addEventListener("click", (event) => {
   event.preventDefault();
-  movmentFunc(currentAccount.movments, !sorted);
+  movmentFunc(currentAccount, !sorted);
   sorted = !sorted;
 });
 
