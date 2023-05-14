@@ -29,10 +29,10 @@ const account1 = {
     "2012-11-20T09:53:00.000Z",
     "2012-11-21T09:53:00.000Z",
     "2012-11-22T09:53:00.000Z",
-    "2012-11-23T09:53:00.000Z",
-    "2012-11-24T09:53:00.000Z",
-    "2012-11-25T09:53:00.000Z",
-    "2012-11-26T09:53:00.000Z",
+    "2023-05-17T09:53:00.000Z",
+    "2023-05-16T09:53:00.000Z",
+    "2023-05-15T09:53:00.000Z",
+    "2023-05-14T09:53:00.000Z",
   ],
   interestRate: 1.2,
   pin: 1111,
@@ -95,16 +95,26 @@ const movmentFunc = function (acc, sort = false) {
   containerMovement.innerHTML = " ";
   const movs = sort ? acc.movments.slice().sort((a, b) => a - b) : acc.movments;
   movs.forEach((mov, i) => {
+    //ADDING TRANSECTION DATES
+    const DisaplayDate = function (date) {
+      const DaysCounter = (date1, date2) =>
+        Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
+      const Days = DaysCounter(new Date(), date);
+      if (Days === 0) return "Today";
+      if (Days === 1) return "Yesterday";
+      if (Days <= 7) return `${Days} days ago`;
+      else {
+        const dd = `${date.getDate()}`.padStart(2, 0);
+        const mm = `${date.getMonth() + 1}`.padStart(2, 0);
+        const yy = date.getFullYear();
+        return `${dd}/${mm}/${yy}`;
+      }
+    };
+    const date = new Date(acc.movDates[i]);
+    const dateOfMov = DisaplayDate(date);
+
     // conditional operator of deposit or withdrawal
     const type = mov > 0 ? "deposit" : "withdrawal";
-
-    //ADDING TRANSECTION DATES
-    console.log(acc.movDates[i]);
-    const date = new Date(acc.movDates[i]);
-    const dd = `${date.getDate()}`.padStart(2, 0);
-    const mm = `${date.getMonth() + 1}`.padStart(2, 0);
-    const yy = date.getFullYear();
-    const dateOfMov = `${dd}/${mm}/${yy}`;
 
     // textContent of HTML'S movements class
     const htmlText = `<div class="movements__row">
