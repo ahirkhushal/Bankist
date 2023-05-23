@@ -24,22 +24,26 @@ const date = document.querySelector(".date");
 const account1 = {
   owner: "khushal ahir",
   movments: [200, -400, 300, 200, -100, 452, 45, 4457],
+  interestRate: 1.2,
+  pin: 1111,
   movDates: [
     "2012-11-19T09:53:00.000Z",
     "2012-11-20T09:53:00.000Z",
     "2012-11-21T09:53:00.000Z",
     "2012-11-22T09:53:00.000Z",
     "2023-05-17T09:53:00.000Z",
-    "2023-05-16T09:53:00.000Z",
-    "2023-05-15T09:53:00.000Z",
-    "2023-05-14T09:53:00.000Z",
+    "2023-05-18T09:53:00.000Z",
+    "2023-05-19T09:53:00.000Z",
+    "2023-05-20T09:53:00.000Z",
   ],
-  interestRate: 1.2,
-  pin: 1111,
+  currency: "IND",
+  locale: "en-IN",
 };
 const account2 = {
   owner: "ayush kavad",
   movments: [450, -4000, 800, -200, -1000, 40552, 12745, -25],
+  interestRate: 1.5,
+  pin: 2222,
   movDates: [
     "2012-12-01T09:53:00.000Z",
     "2012-12-02T09:53:00.000Z",
@@ -50,13 +54,15 @@ const account2 = {
     "2012-12-07T09:53:00.000Z",
     "2012-12-08T09:53:00.000Z",
   ],
-  interestRate: 1.5,
-  pin: 2222,
+  currency: "USD",
+  locale: "en-US",
 };
 
 const account3 = {
   owner: "mihir ahir",
   movments: [100, 4400, 30550, -200, 1500, 452, -245, -500],
+  interestRate: 1,
+  pin: 3333,
   movDates: [
     "2012-12-19T09:53:00.000Z",
     "2012-12-20T09:53:00.000Z",
@@ -67,13 +73,15 @@ const account3 = {
     "2012-12-25T09:53:00.000Z",
     "2012-12-26T09:53:00.000Z",
   ],
-  interestRate: 1,
-  pin: 3333,
+  currency: "EUR",
+  locale: "pt-PT",
 };
 
 const account4 = {
   owner: "mohit kavad",
   movments: [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
+  interestRate: 1.7,
+  pin: 4444,
   movDates: [
     "2013-01-19T09:53:00.000Z",
     "2013-01-20T09:53:00.000Z",
@@ -84,8 +92,8 @@ const account4 = {
     "2013-01-25T09:53:00.000Z",
     "2013-01-26T09:53:00.000Z",
   ],
-  interestRate: 1.7,
-  pin: 4444,
+  currency: "IND",
+  locale: "en-IN",
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -96,7 +104,7 @@ const movmentFunc = function (acc, sort = false) {
   const movs = sort ? acc.movments.slice().sort((a, b) => a - b) : acc.movments;
   movs.forEach((mov, i) => {
     //ADDING TRANSECTION DATES
-    const DisaplayDate = function (date) {
+    const DisaplayDate = function (date, locale) {
       const DaysCounter = (date1, date2) =>
         Math.round(Math.abs((date2 - date1) / (1000 * 60 * 60 * 24)));
       const Days = DaysCounter(new Date(), date);
@@ -104,14 +112,11 @@ const movmentFunc = function (acc, sort = false) {
       if (Days === 1) return "Yesterday";
       if (Days <= 7) return `${Days} days ago`;
       else {
-        const dd = `${date.getDate()}`.padStart(2, 0);
-        const mm = `${date.getMonth() + 1}`.padStart(2, 0);
-        const yy = date.getFullYear();
-        return `${dd}/${mm}/${yy}`;
+        return new Intl.DateTimeFormat(locale).format(date);
       }
     };
     const date = new Date(acc.movDates[i]);
-    const dateOfMov = DisaplayDate(date);
+    const dateOfMov = DisaplayDate(date, acc.locale);
 
     // conditional operator of deposit or withdrawal
     const type = mov > 0 ? "deposit" : "withdrawal";
@@ -175,19 +180,25 @@ const updateUI = (acc) => {
 
 //LOGIN TO ACCOUNT
 let currentAccount;
+
 loginbutton.addEventListener("click", (event) => {
   event.preventDefault();
 
   //LOGIN DATE AND TIME
   const dates = new Date();
-  const dd = `${dates.getDate()}`.padStart(2, 0);
-  const mm = `${dates.getMonth() + 1}`.padStart(2, 0);
-  const yy = dates.getFullYear();
-  const hours = `${dates.getHours()}`.padStart(2, 0);
-  const minutes = `${dates.getMinutes()}`.padStart(2, 0);
-  date.textContent = `${dd}/${mm}/${yy}, ${hours}:${minutes}`;
+  const option = {
+    day: "numeric",
+    month: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+  };
 
   currentAccount = accounts.find((acc) => acc.username === userlogin.value);
+  date.textContent = new Intl.DateTimeFormat(
+    currentAccount.locale,
+    option
+  ).format(dates);
   if (currentAccount?.pin === Number(password.value)) {
     //WELCOME MESSAGE
     displayWelcome.textContent = `WELCOME, ${currentAccount.owner
