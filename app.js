@@ -20,6 +20,7 @@ const loanAmount = document.querySelector(".form__input--loan-amount");
 const requstLoan = document.querySelector(".form__btn--loan");
 const sortbtn = document.querySelector(".btn--sort");
 const date = document.querySelector(".date");
+const timer = document.querySelector(".timer");
 
 const account1 = {
   owner: "khushal ahir",
@@ -201,9 +202,28 @@ const updateUI = (acc) => {
   //DISPLAY SUMMARY
   setaccounts(acc);
 };
+const logOutTImer = function () {
+  let time = 600;
+  const tick = () => {
+    let minute = String(Math.trunc(time / 60)).padStart(2, 0);
+    let seconds = String(time % 60).padStart(2, 0);
+    timer.textContent = `${minute}:${seconds}`;
+
+    if (time === 0) {
+      clearInterval(timeout);
+      displayWelcome.textContent = "Log in to get started";
+      containerapp.style.opacity = 0;
+    }
+
+    time--;
+  };
+  tick();
+  const timeout = setInterval(tick, 1000);
+  return timeout;
+};
 
 //LOGIN TO ACCOUNT
-let currentAccount;
+let currentAccount, time;
 
 loginbutton.addEventListener("click", (event) => {
   event.preventDefault();
@@ -231,10 +251,14 @@ loginbutton.addEventListener("click", (event) => {
     displayWelcome.style.fontWeight = "bold";
     containerapp.style.opacity = 1;
 
-    updateUI(currentAccount);
     //CLEAR LOGIN INPUTS
     userlogin.value = password.value = "";
     password.blur();
+
+    if (time) clearInterval(time);
+    time = logOutTImer();
+
+    updateUI(currentAccount);
   }
 });
 
@@ -262,6 +286,9 @@ transfer.addEventListener("click", (event) => {
   }
   transferTo.value = transferAmmount.value = "";
   transferAmmount.blur();
+
+  clearInterval(time);
+  time = logOutTImer();
 });
 
 //REQUEST LOAN
@@ -271,11 +298,15 @@ requstLoan.addEventListener("click", (event) => {
   const amount = Math.floor(loanAmount.value);
   const o = currentAccount.movments.some((mov) => mov >= amount / 10);
   if (amount > 0 && o) {
-    currentAccount.movments.push(amount);
-    currentAccount.movDates.push(new Date().toISOString());
-    updateUI(currentAccount);
+    setTimeout(() => {
+      currentAccount.movments.push(amount);
+      currentAccount.movDates.push(new Date().toISOString());
+      updateUI(currentAccount);
+    }, 4000);
   }
   loanAmount.value = "";
+  clearInterval(time);
+  time = logOutTImer();
 });
 
 //DELETE ACCOUNT
