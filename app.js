@@ -157,7 +157,7 @@ const countingBalance = function (acc) {
     acc.locale,
     acc.currency,
     acc.balance
-  )}€`;
+  )}`;
 };
 
 //SETTING ACCOUNTS
@@ -166,13 +166,17 @@ const setaccounts = function (acc) {
   const IncomeCount = acc.movments
     .filter((mov) => mov > 0)
     .reduce((acc, cur) => acc + cur, 0);
-  income.textContent = `${IncomeCount.toFixed(2)}€`;
+  income.textContent = `${currencySet(acc.locale, acc.currency, IncomeCount)}`;
 
   // COUNT OUTCOMES
   const outcomes = acc.movments
     .filter((mov) => mov < 0)
     .reduce((acc, cur) => acc + cur, 0);
-  outcome.textContent = `${Math.abs(outcomes).toFixed(2)}€`;
+  outcome.textContent = `${currencySet(
+    acc.locale,
+    acc.currency,
+    Math.abs(outcomes)
+  )}`;
 
   //COUNT INTRESTRATE
   const interestRate = acc.movments
@@ -180,7 +184,11 @@ const setaccounts = function (acc) {
     .map((deposit) => (deposit * acc.interestRate) / 100)
     .filter((int) => int >= 1)
     .reduce((acc, int) => acc + int, 0);
-  interst.textContent = `${interestRate.toFixed(2)}€`;
+  interst.textContent = `${currencySet(
+    acc.locale,
+    acc.currency,
+    interestRate
+  )}`;
 };
 
 const updateUI = (acc) => {
