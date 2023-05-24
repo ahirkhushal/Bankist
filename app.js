@@ -98,6 +98,14 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+//currency internationalization
+const currencySet = (locale, currency, value) => {
+  return new Intl.NumberFormat(locale, {
+    style: "currency",
+    currency: currency,
+  }).format(value);
+};
+
 //DISPLAY MOVMENT
 const movmentFunc = function (acc, sort = false) {
   containerMovement.innerHTML = " ";
@@ -127,7 +135,11 @@ const movmentFunc = function (acc, sort = false) {
       i + 1
     } ${type.toUpperCase()}</div>
     <div class="movements__date">${dateOfMov}</div>
-   <div class="movements__value">${mov.toFixed(2)}€</div>
+   <div class="movements__value">${currencySet(
+     acc.locale,
+     acc.currency,
+     mov
+   )}</div>
  </div>`;
 
     //adding html to movment class
@@ -141,7 +153,11 @@ const countingBalance = function (acc) {
   acc.balance >= 0
     ? (TotalBalance.style.color = "#66c873")
     : (TotalBalance.style.color = "red");
-  TotalBalance.textContent = `${acc.balance.toFixed(2)}€`;
+  TotalBalance.textContent = `${currencySet(
+    acc.locale,
+    acc.currency,
+    acc.balance
+  )}€`;
 };
 
 //SETTING ACCOUNTS
@@ -264,7 +280,6 @@ removeAccConfirm.addEventListener("click", (event) => {
     const indexofAcc = accounts.findIndex(
       (arr) => arr.username === currentAccount.username
     );
-    console.log(indexofAcc);
     accounts.splice(indexofAcc, 1);
     containerapp.style.opacity = 0;
   }
