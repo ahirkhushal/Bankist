@@ -22,12 +22,30 @@ const sortbtn = document.querySelector(".btn--sort");
 const date = document.querySelector(".date");
 const timer = document.querySelector(".timer");
 
-const account1 = {
-  owner: "khushal ahir",
-  movments: [200, -400, 300, 200, -100, 452, 45, 4457],
-  interestRate: 1.2,
-  pin: 1111,
-  movDates: [
+const account = function (
+  owner,
+  movments,
+  interestRate,
+  pin,
+  movDates,
+  currency,
+  locale
+) {
+  this.owner = owner;
+  this.movments = movments;
+  this.interestRate = interestRate;
+  this.pin = pin;
+  this.movDates = movDates;
+  this.currency = currency;
+  this.locale = locale;
+};
+
+const account1 = new account(
+  "khushal ahir",
+  [200, -400, 300, 200, -100, 452, 45, 4457],
+  1.2,
+  1111,
+  [
     "2012-11-19T09:53:00.000Z",
     "2012-11-20T09:53:00.000Z",
     "2012-11-21T09:53:00.000Z",
@@ -37,15 +55,16 @@ const account1 = {
     "2023-05-19T09:53:00.000Z",
     "2023-05-20T09:53:00.000Z",
   ],
-  currency: "IND",
-  locale: "en-IN",
-};
-const account2 = {
-  owner: "ayush kavad",
-  movments: [450, -4000, 800, -200, -1000, 40552, 12745, -25],
-  interestRate: 1.5,
-  pin: 2222,
-  movDates: [
+  "IND",
+  "en-IN"
+);
+
+const account2 = new account(
+  "ayush kavad",
+  [450, -4000, 800, -200, -1000, 40552, 12745, -25],
+  1.5,
+  2222,
+  [
     "2012-12-01T09:53:00.000Z",
     "2012-12-02T09:53:00.000Z",
     "2012-12-03T09:53:00.000Z",
@@ -55,16 +74,15 @@ const account2 = {
     "2012-12-07T09:53:00.000Z",
     "2012-12-08T09:53:00.000Z",
   ],
-  currency: "USD",
-  locale: "en-US",
-};
-
-const account3 = {
-  owner: "mihir ahir",
-  movments: [100, 4400, 30550, -200, 1500, 452, -245, -500],
-  interestRate: 1,
-  pin: 3333,
-  movDates: [
+  "USD",
+  "en-US"
+);
+const account3 = new account(
+  "mihir ahir",
+  [100, 4400, 30550, -200, 1500, 452, -245, -500],
+  1,
+  3333,
+  [
     "2012-12-19T09:53:00.000Z",
     "2012-12-20T09:53:00.000Z",
     "2012-12-21T09:53:00.000Z",
@@ -74,16 +92,15 @@ const account3 = {
     "2012-12-25T09:53:00.000Z",
     "2012-12-26T09:53:00.000Z",
   ],
-  currency: "EUR",
-  locale: "pt-PT",
-};
-
-const account4 = {
-  owner: "mohit kavad",
-  movments: [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
-  interestRate: 1.7,
-  pin: 4444,
-  movDates: [
+  "EUR",
+  "pt-PT"
+);
+const account4 = new account(
+  "mohit kavad",
+  [20000, -458, 180, -200, -1000, 4852, -1245, -2525],
+  1.7,
+  4444,
+  [
     "2013-01-19T09:53:00.000Z",
     "2013-01-20T09:53:00.000Z",
     "2013-01-21T09:53:00.000Z",
@@ -93,10 +110,13 @@ const account4 = {
     "2013-01-25T09:53:00.000Z",
     "2013-01-26T09:53:00.000Z",
   ],
-  currency: "IND",
-  locale: "en-IN",
-};
-
+  "IND",
+  "en-IN"
+);
+console.log(account1);
+console.log(account2);
+console.log(account3);
+console.log(account4);
 const accounts = [account1, account2, account3, account4];
 
 //currency internationalization
