@@ -113,10 +113,7 @@ const account4 = new account(
   "IND",
   "en-IN"
 );
-console.log(account1);
-console.log(account2);
-console.log(account3);
-console.log(account4);
+
 const accounts = [account1, account2, account3, account4];
 
 //currency internationalization
